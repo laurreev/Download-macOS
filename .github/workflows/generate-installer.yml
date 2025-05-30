@@ -79,6 +79,16 @@ jobs:
           zip -r 'Install macOS ${{ env.installer_name }}.zip' 'Install macOS ${{ env.installer_name }}.app'
           mv -v 'Install macOS ${{ env.installer_name }}.zip' ~/Desktop/'${{ env.installer_name }}.zip'
 
+      # Upload to GitHub Release
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "release-${{ github.run_id }}"
+          name: "macOS ${{ env.installer_name }} ${{ github.event.inputs.file }}"
+          files: "~/Desktop/${{ env.installer_name }}.${{ github.event.inputs.file }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       # Upload Installer
       - name: Upload ${{ github.event.inputs.file }}
         uses: actions/upload-artifact@v4
